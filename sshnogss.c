@@ -1,4 +1,6 @@
 #include "putty.h"
+#include "sshgss.h"
+
 #ifndef NO_GSSAPI
 
 /* For platforms not supporting GSSAPI */
