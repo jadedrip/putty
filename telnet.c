@@ -310,43 +310,43 @@ static void proc_rec_opt(Telnet *telnet, int cmd, int option)
     const struct Opt *const *o;
 
     log_option(telnet, "server", cmd, option);
-    for (o = opts; *o; o++) {
-	if ((*o)->option == option && (*o)->ack == cmd) {
-	    switch (telnet->opt_states[(*o)->index]) {
-	      case REQUESTED:
-		telnet->opt_states[(*o)->index] = ACTIVE;
-		activate_option(telnet, *o);
-		break;
-	      case ACTIVE:
-		break;
-	      case INACTIVE:
-		telnet->opt_states[(*o)->index] = ACTIVE;
-		send_opt(telnet, (*o)->send, option);
-		activate_option(telnet, *o);
-		break;
-	      case REALLY_INACTIVE:
-		send_opt(telnet, (*o)->nsend, option);
-		break;
-	    }
-	    return;
-	} else if ((*o)->option == option && (*o)->nak == cmd) {
-	    switch (telnet->opt_states[(*o)->index]) {
-	      case REQUESTED:
-		telnet->opt_states[(*o)->index] = INACTIVE;
-		refused_option(telnet, *o);
-		break;
-	      case ACTIVE:
-		telnet->opt_states[(*o)->index] = INACTIVE;
-		send_opt(telnet, (*o)->nsend, option);
-		option_side_effects(telnet, *o, 0);
-		break;
-	      case INACTIVE:
-	      case REALLY_INACTIVE:
-		break;
-	    }
-	    return;
+	for (o = opts; *o; o++) {
+		if ((*o)->option == option && (*o)->ack == cmd) {
+			switch (telnet->opt_states[(*o)->index]) {
+			case REQUESTED:
+				telnet->opt_states[(*o)->index] = ACTIVE;
+				activate_option(telnet, *o);
+				break;
+			case ACTIVE:
+				break;
+			case INACTIVE:
+				telnet->opt_states[(*o)->index] = ACTIVE;
+				send_opt(telnet, (*o)->send, option);
+				activate_option(telnet, *o);
+				break;
+			case REALLY_INACTIVE:
+				send_opt(telnet, (*o)->nsend, option);
+				break;
+			}
+			return;
+		} else if ((*o)->option == option && (*o)->nak == cmd) {
+			switch (telnet->opt_states[(*o)->index]) {
+			case REQUESTED:
+				telnet->opt_states[(*o)->index] = INACTIVE;
+				refused_option(telnet, *o);
+				break;
+			case ACTIVE:
+				telnet->opt_states[(*o)->index] = INACTIVE;
+				send_opt(telnet, (*o)->nsend, option);
+				option_side_effects(telnet, *o, 0);
+				break;
+			case INACTIVE:
+			case REALLY_INACTIVE:
+				break;
+			}
+			return;
+		}
 	}
-    }
     /*
      * If we reach here, the option was one we weren't prepared to
      * cope with. If the request was positive (WILL or DO), we send

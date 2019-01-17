@@ -1378,29 +1378,29 @@ void term_update(Terminal *term)
  */
 void term_seen_key_event(Terminal *term)
 {
-    /*
-     * On any keypress, clear the bell overload mechanism
-     * completely, on the grounds that large numbers of
-     * beeps coming from deliberate key action are likely
-     * to be intended (e.g. beeps from filename completion
-     * blocking repeatedly).
-     */
-    term->beep_overloaded = FALSE;
-    while (term->beephead) {
-	struct beeptime *tmp = term->beephead;
-	term->beephead = tmp->next;
-	sfree(tmp);
-    }
-    term->beeptail = NULL;
-    term->nbeeps = 0;
+	/*
+	 * On any keypress, clear the bell overload mechanism
+	 * completely, on the grounds that large numbers of
+	 * beeps coming from deliberate key action are likely
+	 * to be intended (e.g. beeps from filename completion
+	 * blocking repeatedly).
+	 */
+	term->beep_overloaded = FALSE;
+	while (term->beephead) {
+		struct beeptime *tmp = term->beephead;
+		term->beephead = tmp->next;
+		sfree(tmp);
+	}
+	term->beeptail = NULL;
+	term->nbeeps = 0;
 
-    /*
-     * Reset the scrollback on keypress, if we're doing that.
-     */
-    if (term->scroll_on_key) {
-	term->disptop = 0;	       /* return to main screen */
-	seen_disp_event(term);
-    }
+	/*
+	 * Reset the scrollback on keypress, if we're doing that.
+	 */
+	if (term->scroll_on_key) {
+		term->disptop = 0;	       /* return to main screen */
+		seen_disp_event(term);
+	}
 }
 
 /*
