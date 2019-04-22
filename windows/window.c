@@ -3086,7 +3086,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT message,
 					term_seen_key_event(term);
 					if (ldisc)
 						ldisc_send(ldisc, buf, len, 1);
-					else if (!backend) { // Restart if inactive
+					else if (session_closed) { // Restart if inactive
 						logevent(NULL, "----- Session restarted -----");
 						term_pwron(term, FALSE);
 						start_backend();

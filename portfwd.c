@@ -601,6 +601,7 @@ static void pfd_chan_free(Channel *chan)
     assert(chan->vt == &PortForwarding_channelvt);
     PortForwarding *pf = container_of(chan, PortForwarding, chan);
     pfd_close(pf);
+	chan->vt = NULL;
 }
 
 /*

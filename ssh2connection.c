@@ -364,7 +364,7 @@ static void ssh2_channel_free(struct ssh2_channel *c)
         c->chanreq_head = c->chanreq_head->next;
         sfree(chanreq);
     }
-    if (c->chan)
+    if (c->chan && c->chan->vt)
         chan_free(c->chan);
     sfree(c);
 }
